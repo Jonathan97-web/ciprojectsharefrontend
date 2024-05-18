@@ -10,6 +10,7 @@ export default function Login() {
   const loggedInUser = useLoggedInUser();
   const setLoggedInUser = useSetLoggedInUser();
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -30,14 +31,22 @@ export default function Login() {
       navigate("/");
     } catch (err) {
       console.log(err);
+      setError(err.response.data);
     }
   };
+
+  if (error?.detail == "User not found") {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh");
+  }
 
   return (
     <>
       {!loggedInUser ? (
-        <form onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-3 mt-5" onSubmit={handleSubmit}>
+          {error?.non_field_errors}
           <input type="text" onChange={(e) => setUsername(e.target.value)} />
+          {error?.password}
           <input type="text" onChange={(e) => setPassword(e.target.value)} />
           <button type="submit">Submit</button>
         </form>
