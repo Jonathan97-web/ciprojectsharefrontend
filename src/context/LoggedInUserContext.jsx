@@ -9,6 +9,7 @@ export const useSetLoggedInUser = () => useContext(SetLoggedInUserContext);
 
 export const LoggedInUserProvider = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleMount = async () => {
     try {
@@ -22,12 +23,18 @@ export const LoggedInUserProvider = ({ children }) => {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     handleMount();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <LoggedInUserContext.Provider value={loggedInUser}>
       <SetLoggedInUserContext.Provider value={setLoggedInUser}>
