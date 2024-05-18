@@ -34,6 +34,11 @@ export default function Signup() {
     }
   };
 
+  if (error?.detail == "User not found") {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh");
+  }
+
   return (
     <>
       {!loggedInUser ? (
