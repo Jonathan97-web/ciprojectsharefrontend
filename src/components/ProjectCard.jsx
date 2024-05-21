@@ -1,10 +1,15 @@
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, username }) {
   return (
     <>
       <div className="card">
+        <div className="card-header border-2 border-white">
+          <h2>
+            <a href={`/profile/${project.developer}`}>{username}</a>
+          </h2>
+        </div>
         <div className="card-body border-2 border-white">
           <h5 className="card-title">
-            <a href={`/project/${project.developer}`}>{project.title}</a>
+            <a href={`/project/${project.id}`}>{project.title}</a>
           </h5>
           <p className="card-text">Description: {project.description}</p>
           <p className="card-text">{project.developer}</p>
