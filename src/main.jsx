@@ -9,6 +9,8 @@ import Signup from "./pages/Signup.jsx";
 import NavBar from "./components/NavBar.jsx";
 import ProfileDetail from "./pages/ProfileDetail.jsx";
 import ProjectDetail from "./pages/ProjectDetail.jsx";
+import Projects from "./pages/Projects.jsx";
+import AddProject from "./pages/Projects/AddProject.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -20,7 +22,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile/:id" element={<ProfileDetail />} />
+          <Route path="/profile/project/:id" element={<Projects />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
+          <Route path="/project/add" element={<AddProject />} />
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Router>
