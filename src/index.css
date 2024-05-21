@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 :root {
   font-family: "Fira Code", Inter, system-ui, Avenir, Helvetica, Arial,
     sans-serif;
@@ -29,13 +34,8 @@ a:hover {
 }
 
 body {
-  place-items: center;
   min-width: 100vw;
   min-height: 100vh;
-}
-
-.navbar {
-  margin: 0;
 }
 
 h1 {
@@ -62,15 +62,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.btn-red {
+  background-color: rgb(213, 0, 0);
 }
