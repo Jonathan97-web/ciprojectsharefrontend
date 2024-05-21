@@ -3,14 +3,16 @@ import { useLoggedInUser } from "./context/LoggedInUserContext";
 import ProjectCard from "./components/ProjectCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Alert from "./components/Alert";
+import { useLocation } from "react-router-dom";
 
 function App() {
   const loggedInUser = useLoggedInUser();
   const [projects, setProjects] = useState([]);
+  const location = useLocation();
 
   const fetchProjects = async () => {
     const data = await axios.get("http://localhost:8000/projects/");
-    console.log(data.data);
     setProjects(data.data);
   };
 
@@ -20,6 +22,7 @@ function App() {
 
   return (
     <>
+      {location.state?.alert && <Alert message={location.state?.alert} />}
       {!loggedInUser && (
         <>
           <h1>Welcome!</h1>
