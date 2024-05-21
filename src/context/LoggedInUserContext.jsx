@@ -33,7 +33,7 @@ export const LoggedInUserProvider = ({ children }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
   return (
     <LoggedInUserContext.Provider value={loggedInUser}>
