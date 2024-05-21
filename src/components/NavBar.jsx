@@ -10,11 +10,19 @@ export default function NavBar() {
   return (
     <>
       {loggedInUser ? (
-        <div className="sticky flex justify-between top-0 navbar">
+        <div className="sticky pt-5 flex justify-between top-0 navbar">
           <h2>
             <a href="/">#Community-Sweden</a>
           </h2>
           <div>
+            <button onClick={() => navigate("/project/add")}>
+              Add Project
+            </button>
+            <button
+              onClick={() => navigate(`/profile/project/${loggedInUser?.pk}`)}
+            >
+              My Projects
+            </button>
             <button onClick={() => navigate(`/profile/${loggedInUser?.pk}`)}>
               {loggedInUser?.username} | Profile
             </button>
