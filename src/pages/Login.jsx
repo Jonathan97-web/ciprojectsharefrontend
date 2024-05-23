@@ -10,8 +10,8 @@ export default function Login() {
   const loggedInUser = useLoggedInUser();
   const setLoggedInUser = useSetLoggedInUser();
   const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
