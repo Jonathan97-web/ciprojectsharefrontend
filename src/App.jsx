@@ -11,14 +11,15 @@ function App() {
   const [projects, setProjects] = useState([]);
   const location = useLocation();
 
-  const fetchProjects = async () => {
-    const data = await axios.get("http://localhost:8000/projects/");
-    setProjects(data.data);
-  };
-
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    if (loggedInUser) {
+      const fetchProjects = async () => {
+        const data = await axios.get("http://localhost:8000/projects/");
+        setProjects(data.data);
+      };
+      fetchProjects();
+    }
+  }, [loggedInUser]);
 
   return (
     <>
