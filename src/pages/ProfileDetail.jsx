@@ -21,9 +21,7 @@ export default function ProfileDetail() {
       setFirstName(response?.data?.first_name || "");
       setLastName(response?.data?.last_name || "");
     } catch (err) {
-      if (err.response.status === 404) {
-        setError(err.response.status);
-      }
+      setError(err.response.status);
       console.log(err);
     }
   };
@@ -59,6 +57,8 @@ export default function ProfileDetail() {
 
   if (error === 404) {
     return <div>Profile not found</div>;
+  } else if (error === 401) {
+    return <div>You are not authorized, not logged in</div>;
   }
 
   return (
