@@ -2,7 +2,10 @@ import useFetchData from "../hooks/useFetchData";
 import useProject from "../hooks/useProject.jsx";
 import ProjectCard from "../components/ProjectCard";
 import { useLoggedInUser } from "../context/LoggedInUserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Comment from "../components/Comment.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectDetail() {
   const loggedInUser = useLoggedInUser();
@@ -20,13 +23,64 @@ export default function ProjectDetail() {
     handleChange,
   } = useProject();
 
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
+  const [editedComment, setEditedComment] = useState("");
+  const [users, setUsers] = useState([]);
+  const [editCommentId, setEditCommentId] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const getComments = async () => {
+      try {
+        const data = await axios.get("http://localhost:8000/comments/");
+        const user = await axios.get(`http://localhost:8000/users/`);
+        setUsers(user?.data);
+        setComments(data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (!editProject) {
       setDeleteProject(true);
     } else {
       setDeleteProject(false);
     }
+    getComments();
   }, [editProject, setDeleteProject]);
+
+  console.log(editCommentId);
+
+  const handleCommentSubmit = async () => {
+    try {
+      if (!editCommentId) {
+        await axios.post("http://localhost:8000/comments/", {
+          comment: comment,
+          user: loggedInUser.pk,
+          project: project.id,
+        });
+      } else {
+        await axios.patch(`http://localhost:8000/comments/${editCommentId}/`, {
+          comment: editedComment,
+          user: loggedInUser.pk,
+          project: project.id,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteComment = async (comment) => {
+    try {
+      await axios.delete(`http://localhost:8000/comments/${comment.id}`);
+      setComments(comments.filter((c) => c.id !== comment.id));
+      navigate(`/project/${project.id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -46,6 +100,72 @@ export default function ProjectDetail() {
               </button>
             </div>
           )}
+          {comments
+            .filter((comment) => comment.project === project.id)
+            .map((comment, id) => {
+              const user = users.find((user) => user.id === comment.user);
+              return (
+                <div key={id} className="flex flex-col mt-5">
+                  <Comment
+                    id={comment.id}
+                    user_id={user.id}
+                    comment={
+                      editCommentId === comment.id &&
+                      loggedInUser.pk === comment.user ? (
+                        <form
+                          onSubmit={handleCommentSubmit}
+                          className="flex flex-col"
+                        >
+                          <input
+                            className="placeholder:text-center"
+                            type="text"
+                            placeholder={comment.comment}
+                            onChange={(e) => setEditedComment(e.target.value)}
+                          />
+                          <button type="submit">Submit</button>
+                        </form>
+                      ) : (
+                        comment.comment
+                      )
+                    }
+                    user={user ? user.username : comment.user}
+                    created={comment.created_at}
+                    updated={comment.updated_at}
+                  />
+                  {loggedInUser.pk === comment.user && (
+                    <>
+                      <button
+                        onClick={() => handleDeleteComment(comment)}
+                        className="btn-red"
+                      >
+                        Delete Comment
+                      </button>
+                      <button onClick={() => setEditCommentId(comment.id)}>
+                        Edit
+                      </button>
+                      {editCommentId === comment.id &&
+                        loggedInUser.pk === comment.user && (
+                          <button onClick={() => setEditCommentId(false)}>
+                            Cancel
+                          </button>
+                        )}
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          <form
+            onSubmit={handleCommentSubmit}
+            className="mt-5 flex flex-col gap-5"
+          >
+            <p>Add Comment</p>
+            <input
+              onChange={(e) => setComment(e.target.value)}
+              type="text"
+              placeholder="Add a comment"
+            />
+            <button type="submit">Submit</button>
+          </form>
         </>
       ) : (
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
