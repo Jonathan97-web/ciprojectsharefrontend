@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Comment from "../components/Comment.jsx";
 import { useNavigate } from "react-router-dom";
+import instance from "../api/axios.js";
 
 export default function ProjectDetail() {
   const loggedInUser = useLoggedInUser();
@@ -33,8 +34,8 @@ export default function ProjectDetail() {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const data = await axios.get("http://localhost:8000/comments/");
-        const user = await axios.get(`http://localhost:8000/users/`);
+        const data = await instance.get("/comments/");
+        const user = await instance.get(`/users/`);
         setUsers(user?.data);
         setComments(data.data);
       } catch (err) {
@@ -55,13 +56,13 @@ export default function ProjectDetail() {
   const handleCommentSubmit = async () => {
     try {
       if (!editCommentId) {
-        await axios.post("http://localhost:8000/comments/", {
+        await axios.instance("/comments/", {
           comment: comment,
           user: loggedInUser.pk,
           project: project.id,
         });
       } else {
-        await axios.patch(`http://localhost:8000/comments/${editCommentId}/`, {
+        await instance.patch(`/comments/${editCommentId}/`, {
           comment: editedComment,
           user: loggedInUser.pk,
           project: project.id,
@@ -74,7 +75,7 @@ export default function ProjectDetail() {
 
   const handleDeleteComment = async (comment) => {
     try {
-      await axios.delete(`http://localhost:8000/comments/${comment.id}`);
+      await instance.delete(`/comments/${comment.id}`);
       setComments(comments.filter((c) => c.id !== comment.id));
       navigate(`/project/${project.id}`);
     } catch (err) {

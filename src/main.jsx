@@ -11,23 +11,44 @@ import ProfileDetail from "./pages/ProfileDetail.jsx";
 import ProjectDetail from "./pages/ProjectDetail.jsx";
 import Projects from "./pages/Projects.jsx";
 import AddProject from "./pages/Projects/AddProject.jsx";
+import { ThemeProvider } from "@mui/material";
+import { lightTheme, darkTheme } from "./utils/theme.js";
+import CssBaseline from "@mui/material/CssBaseline";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <LoggedInUserProvider>
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<App />} errorElement={<div>Error</div>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/profile/:id" element={<ProfileDetail />} />
-          <Route path="/profile/project/:id" element={<Projects />} />
-          <Route path="/project/:id" element={<ProjectDetail />} />
-          <Route path="/project/add" element={<AddProject />} />
-          <Route path="*" element={<div>Not Found</div>} />
-        </Routes>
-      </Router>
-    </LoggedInUserProvider>
-  </React.StrictMode>
-);
+
+const Main = () => {
+  const [themeMode, setThemeMode] = React.useState('light');
+
+  const theme = React.useMemo(() => {
+    return themeMode === 'light' ? lightTheme : darkTheme;
+  }, [themeMode]);
+
+  const toggleTheme = () => {
+    setThemeMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <React.StrictMode>
+      <LoggedInUserProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline /> {/* Ensure CssBaseline is included */}
+          <Router>
+            <NavBar toggleTheme={toggleTheme} themeMode={themeMode} />
+            <Routes>
+              <Route path="/" element={<App />} errorElement={<div>Error</div>} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/profile/:id" element={<ProfileDetail />} />
+              <Route path="/profile/projects/" element={<Projects />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/project/add" element={<AddProject />} />
+              <Route path="*" element={<div>Not Found</div>} />
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </LoggedInUserProvider>
+    </React.StrictMode>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Main />);

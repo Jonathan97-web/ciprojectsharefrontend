@@ -3,34 +3,35 @@ import {
   useSetLoggedInUser,
 } from "../context/LoggedInUserContext";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import instance from "../api/axios";
 
 export default function Signup() {
   const loggedInUser = useLoggedInUser();
   const setLoggedInUser = useSetLoggedInUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:8000/dj-rest-auth/registration/",
+      const { data } = await instance.post(
+        `/auth/local/register`,
         {
           username: username,
-          password1: password,
-          password2: password,
+          password: password,
+          email: email,
         }
       );
       localStorage.setItem("token", data.access);
       setLoggedInUser(data.user);
       navigate("/");
     } catch (err) {
-      console.log(err.response.data);
-      setError(err.response.data);
+      console.log(err.response.data.error);
+      setError(err.response.data.error);
     }
   };
 
@@ -50,8 +51,10 @@ export default function Signup() {
               <br />
             </p>
           )}
-          <input type="text" onChange={(e) => setUsername(e.target.value)} />
-          <input type="text" onChange={(e) => setPassword(e.target.value)} />
+          <input type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+          <input type="text" placeholder="username" onChange={(e) => setUsername(e.target.value)} />
+          <input type="text" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+          {error.message}
           <button type="submit">Submit</button>
         </form>
       ) : (

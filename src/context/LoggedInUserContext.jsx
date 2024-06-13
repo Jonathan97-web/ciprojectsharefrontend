@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
-
+import instance from "../api/axios";
 export const LoggedInUserContext = createContext(null);
 export const SetLoggedInUserContext = createContext(null);
 
@@ -14,12 +13,18 @@ export const LoggedInUserProvider = ({ children }) => {
   const handleMount = async () => {
     try {
       let token = localStorage.getItem("token");
+      console.log(token)
       if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        const { data } = await axios.get(
-          "http://localhost:8000/dj-rest-auth/user/"
+        const { data } = await instance.get(
+          "/users/me?_populate=*",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setLoggedInUser(data);
+        console.log(data)
       }
     } catch (err) {
       console.log(err);

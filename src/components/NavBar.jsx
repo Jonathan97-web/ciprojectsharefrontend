@@ -1,8 +1,8 @@
 import { useLoggedInUser } from "../context/LoggedInUserContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../index.css";
 import useSignOut from "../hooks/useSignOut";
-export default function NavBar() {
+export default function NavBar({ toggleTheme, themeMode }) {
   const loggedInUser = useLoggedInUser();
   const navigate = useNavigate();
   const signOut = useSignOut();
@@ -10,20 +10,21 @@ export default function NavBar() {
   return (
     <>
       {loggedInUser ? (
-        <div className="sticky pt-5 flex justify-between top-0 navbar">
+        <div className="sticky pt-5 flex justify-between top-0 bg-[#] w-[80vw]">
           <h2>
-            <a href="/">#Community-Sweden</a>
+            <Link to="/">#Community-Sweden</Link>
           </h2>
           <div>
             <button onClick={() => navigate("/project/add")}>
               Add Project
             </button>
             <button
-              onClick={() => navigate(`/profile/project/${loggedInUser?.pk}`)}
+              onClick={() => navigate(`/profile/projects/`)}
             >
               My Projects
             </button>
-            <button onClick={() => navigate(`/profile/${loggedInUser?.pk}`)}>
+            <button onClick={() => toggleTheme()}>{themeMode === 'light' ? 'Light Mode' : 'Dark Mode'}</button>
+            <button onClick={() => navigate(`/profile/${loggedInUser?.id}`)}>
               {loggedInUser?.username} | Profile
             </button>
             <button onClick={signOut}>Logout</button>

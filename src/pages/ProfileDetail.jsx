@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useLoggedInUser } from "../context/LoggedInUserContext";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import instance from "../api/axios";
 
 export default function ProfileDetail() {
   const loggedInUser = useLoggedInUser();
@@ -16,7 +16,7 @@ export default function ProfileDetail() {
       if (!id) {
         return;
       }
-      const response = await axios.get(`http://localhost:8000/profiles/${id}`);
+      const response = await instance.get(`/users/${id}`);
       setProfile(response?.data);
       setFirstName(response?.data?.first_name || "");
       setLastName(response?.data?.last_name || "");
@@ -26,12 +26,14 @@ export default function ProfileDetail() {
     }
   };
 
+  console.log(id)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loggedInUser?.pk == id) {
       try {
-        const response = await axios.patch(
-          `http://localhost:8000/profiles/${id}/`,
+        const response = await instance.patch(
+          `/users/${id}/`,
           {
             first_name: firstName,
             last_name: lastName,

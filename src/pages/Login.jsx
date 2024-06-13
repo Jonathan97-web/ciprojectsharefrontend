@@ -3,8 +3,8 @@ import {
   useSetLoggedInUser,
   useLoggedInUser,
 } from "../context/LoggedInUserContext";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import instance from "../api/axios";
 
 export default function Login() {
   const loggedInUser = useLoggedInUser();
@@ -17,17 +17,16 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:8000/dj-rest-auth/login/",
+      const {data}  = await instance.post(
+        "/auth/local/",
         {
-          username: username,
+          identifier: username,
           password: password,
         }
       );
-      console.log(data);
-      localStorage.setItem("token", data.access);
-      localStorage.setItem("refresh", data.refresh);
+      localStorage.setItem("token", data.jwt);
       setLoggedInUser(data.user);
+      console.log(data)
       navigate("/");
     } catch (err) {
       console.log(err);

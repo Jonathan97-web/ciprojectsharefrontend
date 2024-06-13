@@ -7,17 +7,20 @@ export default function Projects() {
   const { projects, developer } = useFetchData();
 
   const checkIfUserIsDeveloper = (project) => {
-    return project.developer === loggedInUser?.pk;
+    return project.developer === loggedInUser?.id;
   };
+
+  console.log(loggedInUser)
+  console.log(developer)
   return (
     <>
-      {projects.filter(checkIfUserIsDeveloper).map((project, id) => (
+{/*       {projects.filter(checkIfUserIsDeveloper).map((project, id) => (
         <ProjectCard
           key={id}
           project={project}
           username={developer?.username}
         />
-      ))}
+      ))} */}
     </>
   );
 }
