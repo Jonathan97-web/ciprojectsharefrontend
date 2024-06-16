@@ -10,17 +10,18 @@ export default function Projects() {
     return project.developer === loggedInUser?.id;
   };
 
-  console.log(loggedInUser)
-  console.log(developer)
+  console.log(projects);
+
+  console.log(loggedInUser);
   return (
     <>
-{/*       {projects.filter(checkIfUserIsDeveloper).map((project, id) => (
+      {projects.filter(checkIfUserIsDeveloper).map((project, id) => (
         <ProjectCard
           key={id}
           project={project}
           username={developer?.username}
         />
-      ))} */}
+      ))}
     </>
   );
 }

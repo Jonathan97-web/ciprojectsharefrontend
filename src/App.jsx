@@ -1,10 +1,10 @@
 import "./App.css";
 import { useLoggedInUser } from "./context/LoggedInUserContext";
 import ProjectCard from "./components/ProjectCard";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Alert from "./components/Alert";
 import { useLocation } from "react-router-dom";
+import instance from "./api/axios";
 
 function App() {
   const loggedInUser = useLoggedInUser();
@@ -14,12 +14,14 @@ function App() {
   useEffect(() => {
     if (loggedInUser) {
       const fetchProjects = async () => {
-        const data = await axios.get("http://localhost:8000/projects/");
+        const { data } = await instance.get("/projects?populate=*");
         setProjects(data.data);
       };
       fetchProjects();
     }
   }, [loggedInUser]);
+
+  console.log(projects);
 
   return (
     <>

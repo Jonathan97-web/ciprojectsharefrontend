@@ -1,37 +1,30 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useLoggedInUser } from "../context/LoggedInUserContext";
 import instance from "../api/axios";
 
 export default function useFetchData() {
-  const loggedInUser = useLoggedInUser();
   const { id } = useParams();
   const [project, setProject] = useState([]);
   const [projects, setProjects] = useState([]);
   const [developer, setDeveloper] = useState(null);
 
-
   const fetchProject = async () => {
     try {
       if (id) {
-        const { data } = await instance.get(
-          `/projects/${id}`
-        );
-        const developer = await instance.get(
-          `/users/?_populate=*`
-        );
+        const { data } = await instance.get(`/projects/${id}`);
+        const { developer } = await instance.get(`/users/?populate=*`);
         setDeveloper(developer?.data);
         setProject(data);
       }
-      const projectList = await instance.get(`/projects?_populate=*`);
+      const projectList = await instance.get(`/projects?populate=*`);
       setProjects(projectList?.data);
     } catch (err) {
       console.log(err);
     }
   };
 
-  console.log(projects)
+  console.log(projects);
+  console.log(developer);
 
   useEffect(() => {
     fetchProject();
