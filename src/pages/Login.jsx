@@ -17,16 +17,16 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const {data}  = await instance.post(
+      const response  = await instance.post(
         "/auth/local/",
         {
           identifier: username,
           password: password,
         }
       );
-      localStorage.setItem("token", data.jwt);
-      setLoggedInUser(data.user);
-      console.log(data)
+      localStorage.setItem("jwt", response.data.jwt);
+      setLoggedInUser(response.data.user);
+      console.log(response.data)
       navigate("/");
     } catch (err) {
       console.log(err);

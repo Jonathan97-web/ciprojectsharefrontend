@@ -19,8 +19,8 @@ export default function ProjectDetail() {
     error,
     title,
     description,
-    homepage,
-    repo,
+    deployedURL,
+    githubURL,
     handleChange,
   } = useProject();
 
@@ -51,7 +51,6 @@ export default function ProjectDetail() {
     getComments();
   }, [editProject, setDeleteProject]);
 
-  console.log(editCommentId);
 
   const handleCommentSubmit = async () => {
     try {
@@ -196,9 +195,9 @@ export default function ProjectDetail() {
           <input
             type="text"
             name="homepage"
-            value={homepage}
+            value={deployedURL}
             onChange={handleChange}
-            placeholder={project.homepage}
+            placeholder={project.deployedURL}
           />
           <div className="flex flex-col items-start">
             Repo {error && <p>{error.repo}</p>}
@@ -206,9 +205,9 @@ export default function ProjectDetail() {
           <input
             type="text"
             name="repo"
-            value={repo}
+            value={githubURL}
             onChange={handleChange}
-            placeholder={project.repo}
+            placeholder={project.githubURL}
           />
           <button className="btn bg-green-500" type="submit">
             Submit

@@ -11,15 +11,29 @@ export const lightTheme = createTheme({
         text: {
             primary: '#000000',
         },
+    },
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: `
+            `,
+        },
     }
 })
-
 
 export const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         background: {
             default: '#121212',
-    }, 
+        }, 
+    },
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: `
+                input {
+                    color: #000000; 
+                }
+            `,
+        },
     }
- })
+});

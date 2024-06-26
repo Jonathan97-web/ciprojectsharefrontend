@@ -12,19 +12,19 @@ export const LoggedInUserProvider = ({ children }) => {
 
   const handleMount = async () => {
     try {
-      let token = localStorage.getItem("token");
-      console.log(token)
-      if (token) {
-        const { data } = await instance.get(
-          "/users/me?_populate=*",
+      const jwt = localStorage.getItem("jwt");
+      console.log(jwt)
+      if (jwt) {
+        const response = await instance.get(
+          "/users/me",
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${jwt}`,
             },
           }
         );
-        setLoggedInUser(data);
-        console.log(data)
+        setLoggedInUser(response.data);
+        console.log(response)
       }
     } catch (err) {
       console.log(err);

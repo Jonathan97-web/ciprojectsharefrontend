@@ -17,7 +17,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 
 const Main = () => {
-  const [themeMode, setThemeMode] = React.useState('light');
+  const [themeMode, setThemeMode] = React.useState('dark');
 
   const theme = React.useMemo(() => {
     return themeMode === 'light' ? lightTheme : darkTheme;

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function ProjectCard({ project }) {
-  console.log(project.attributes.owner.data.attributes.username);
   const owner = project?.attributes.owner.data;
   const projectData = project?.attributes;
 

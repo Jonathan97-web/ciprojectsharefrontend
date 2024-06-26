@@ -18,25 +18,24 @@ export default function ProfileDetail() {
       }
       const response = await instance.get(`/users/${id}`);
       setProfile(response?.data);
-      setFirstName(response?.data?.first_name || "");
-      setLastName(response?.data?.last_name || "");
+      setFirstName(response?.data?.firstName || "");
+      setLastName(response?.data?.lastName || "");
     } catch (err) {
       setError(err.response.status);
       console.log(err);
     }
   };
 
-  console.log(id)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loggedInUser?.pk == id) {
+    if (loggedInUser?.id == id) {
       try {
-        const response = await instance.patch(
+        const response = await instance.put(
           `/users/${id}/`,
           {
-            first_name: firstName,
-            last_name: lastName,
+            firstName: firstName,
+            lastName: lastName,
           }
         );
         console.log(response?.data);
@@ -70,13 +69,13 @@ export default function ProfileDetail() {
           <div className="flex flex-col">
             <h2>Name</h2>
             <p>
-              {profile?.first_name} {profile?.last_name}
+              {profile?.firstName} {profile?.lastName}
             </p>
             <h2>Email</h2>
             <p> {profile?.email}</p>
           </div>
           <br />
-          {loggedInUser?.pk == id && (
+          {loggedInUser?.id == id && (
             <>
               <button onClick={() => setEdit(true)}>edit</button>
             </>
@@ -86,16 +85,18 @@ export default function ProfileDetail() {
         <>
           <div>Hello</div>
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-            <label htmlFor="first_name">First Name</label>
+            <label htmlFor="fName">First Name</label>
             <input
+              id="fName"
               type="text"
-              placeholder={profile?.first_name}
+              placeholder={profile?.firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
-            <label htmlFor="last_name">Last Name</label>
+            <label htmlFor="lName">Last Name</label>
             <input
+              id="lName"
               type="text"
-              placeholder={profile?.last_name}
+              placeholder={profile?.lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
             <button type="submit">Submit</button>

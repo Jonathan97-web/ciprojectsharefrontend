@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLoggedInUser } from "../context/LoggedInUserContext";
 import useFetchData from "./useFetchData";
+import instance from "../api/axios";
 export default function useProject() {
   const [editProject, setEditProject] = useState(false);
   const [addProject, setAddProject] = useState(false);
@@ -16,9 +17,9 @@ export default function useProject() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    homepage: "",
-    repo: "",
-    developer: loggedInUser?.pk,
+    githubURL: "",
+    deployedURL: "",
+    owner: loggedInUser?.id,
   });
 
   useEffect(() => {
@@ -27,9 +28,9 @@ export default function useProject() {
         setFormData({
           title: project?.title || "",
           description: project.description || "",
-          homepage: project.homepage || "",
-          repo: project.repo || "",
-          developer: loggedInUser?.pk,
+          deployedURL: project.deployedURL || "",
+          githubURL: project.githubURL || "",
+          owner: loggedInUser?.id,
         });
       } catch (err) {
         console.log(err);
@@ -40,8 +41,8 @@ export default function useProject() {
     id,
     loggedInUser,
     project.title,
-    project.homepage,
-    project.repo,
+    project.deployedURL,
+    project.githubURL,
     project.description,
   ]);
 
@@ -50,11 +51,12 @@ export default function useProject() {
 
     try {
       if (addProject) {
-        const response = await axios.post(
-          "http://localhost:8000/projects/",
-          formData
+        const response = await instance.post(
+          "/projects/",
+          { data: formData, }
         );
-        if (response.status === 201) {
+        console.log(response)
+        if (response.status === 200) {
           navigate("/", {
             state: { alert: "Succesfully created the project!!" },
           });
@@ -67,7 +69,9 @@ export default function useProject() {
         });
       }
       if (editProject) {
-        axios.patch(`http://localhost:8000/projects/${id}/`, formData);
+        axios.patch(`http://localhost:8000/projects/${id}/`,
+          { data: formData, }
+        );
         navigate("/", { state: { alert: "Successfully edited the Project" } });
       }
     } catch (err) {
